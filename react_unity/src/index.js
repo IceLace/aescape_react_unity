@@ -1,33 +1,50 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Unity, { UnityContent } from "react-unity-webgl";
-// import './index.css';
-
-// const unityContent = new UnityContent(
-//     "/unity/build/html.json",
-//     "/unity/build/UnityLoader.js"
-// );
-
-// const App = () => {
-//     return <Unity unityContent={unityContent} />;
-// }
 
 const START_STATUS = "START";
 const STOP_STATUS = "STOP";
 const ACTIVE_STATUS = "ACTIVE";
 const DEACTIVE_STATUS = "DEACTIVE";
 
+export class UnityComponent extends React.Component {  
+    render() {
+        return (
+            <div>
+                <Unity unityContent={this.props.unityContent} />             
+            </div>
+        );
+    }
+}
+
+export class ControlsComponent extends React.Component {
+    render() {
+        return (
+            <div>
+                <center>
+                    <button onClick={this.props.onClickActive}>MAKE {this.props.visibleState}</button>
+                    <button onClick={this.props.onClickRotation}>{this.props.rotationState} ROTATION</button>
+                    <button onClick={this.props.onClickChangeColor}>CHANGE COLOR</button>
+                </center>
+            </div>
+        );
+    }
+}
+
 export class App extends React.Component {
     constructor(props) {
         super(props);  
-        this.unityContent = new UnityContent(
-            "unity/build/html.json",
-            "unity/build/UnityLoader.js"
-        );
+
         this.state = {
             visible_state: DEACTIVE_STATUS,
             rotation_state: START_STATUS
         };
+
+        this.unityContent = new UnityContent(
+            "unity/build/html.json",
+            "unity/build/UnityLoader.js"
+        );
+        
         this.onClickActive = this.onClickActive.bind(this);
         this.onClickRotation = this.onClickRotation.bind(this);
         this.onClickChangeColor = this.onClickChangeColor.bind(this);
@@ -66,19 +83,20 @@ export class App extends React.Component {
     onClickChangeColor() {
         this.unityContent.send("Manager", "ChangeColor");
     }
-  
+
     render() {
         return (
             <div>
-                <Unity unityContent={this.unityContent} />
-                <br/>
-                <div>
-                    <center>
-                        <button onClick={this.onClickActive}>MAKE {this.state.visible_state}</button>
-                        <button onClick={this.onClickRotation}>{this.state.rotation_state} ROTATION</button>
-                        <button onClick={this.onClickChangeColor}>CHANGE COLOR</button>
-                    </center>
-                </div>
+                <UnityComponent unityContent={this.unityContent} />
+                <br />
+                <ControlsComponent
+                    unityContent={this.unityContent}
+                    visibleState={this.state.visible_state}
+                    rotationState={this.state.rotation_state}
+                    onClickActive={this.onClickActive}
+                    onClickRotation={this.onClickRotation}
+                    onClickChangeColor={this.onClickChangeColor}
+                />
             </div>
         );
     }
