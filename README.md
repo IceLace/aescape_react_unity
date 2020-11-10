@@ -1,5 +1,5 @@
-# aescape_react_unity
-Unity Test Project for AESCAPE
+# react_unity
+Test to manipulate a webgl project made in unity using html controls in react
 
 Unity Project is inside of unity_webgl folder.
 
